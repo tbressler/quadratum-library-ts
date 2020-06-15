@@ -9,11 +9,15 @@ describe('Player class', () => {
     let player: Player;
 
 
+    // ---- constructor():
+
     // Test:
     it ('should throw an error when constructed with an empty name', () => {
         expect(() => new Player('')).to.throw(Error);
     });
 
+
+    // ---- getName():
 
     // Test:
     it('should have a name' , () => {

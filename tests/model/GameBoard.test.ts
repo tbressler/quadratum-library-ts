@@ -12,6 +12,8 @@ describe('GameBoard class', () => {
     let gameBoard: GameBoard = new GameBoard(player1, player2);
 
 
+    // ---- constructor():
+
     // Test:
     it('should create a valid game board when constructed with two valid players' , () => {
         let player1 = new Player('player 1');
@@ -36,16 +38,19 @@ describe('GameBoard class', () => {
     });
 
 
+    // ---- getPlayer1():
+
     // Test:
     it('should have a player 1' , () => {
         expect(gameBoard.getPlayer1).to.equal(player1);
     });
 
+
+    // ---- getPlayer2():
+
     // Test:
     it('should have a player 2' , () => {
         expect(gameBoard.getPlayer2).to.equal(player2);
     });
-
-
 
 });
