@@ -185,82 +185,108 @@ describe('GameBoard class', () => {
 
     // ---- addGameBoardListener(listener):
 
+    // Mock for listeners.
+    function mockListener(cbOPP: (n: number, p: Player) => void, cbOGBC: () => void): GameBoardListener {
+        return new class implements GameBoardListener {
+            onPiecePlaced(index: number, player: Player): void { cbOPP(index, player); }
+            onGameBoardCleared(): void { cbOGBC(); }
+        }
+    }
+
     // Test:
     it('addGameBoardListener(index) should add a listener that will be notified if a piece was placed' , () => {
-        let emitted: [number?, Player?] = [];
+        let emitted1: [number?, Player?] = [];
+        let listener1 = mockListener((n,p) => emitted1 = [n,p], () => {});
+        gameBoard.addGameBoardListener(listener1);
 
-        let listener: GameBoardListener = new class implements GameBoardListener {
-            onPiecePlaced(index: number, player: Player): void {
-                emitted = [index, player];
-            }
-            onGameBoardCleared(): void {
-            }
-        }
-
-        gameBoard.addGameBoardListener(listener);
         gameBoard.placePieceOnField(20, player1);
 
-        expect(emitted[0]).to.equal(20);
-        expect(emitted[1]).to.equal(player1);
+        expect(emitted1[0]).to.equal(20);
+        expect(emitted1[1]).to.equal(player1);
+    });
+
+    // Test:
+    it('addGameBoardListener(index) should add multiple listeners that will all be notified if a piece was placed' , () => {
+        let emitted1: [number?, Player?] = [];
+        let listener1 = mockListener((n,p) => emitted1 = [n,p], () => []);
+        gameBoard.addGameBoardListener(listener1);
+
+        let emitted2: [number?, Player?] = [];
+        let listener2 = mockListener((n,p) => emitted2 = [n,p], () => []);
+        gameBoard.addGameBoardListener(listener2);
+
+        gameBoard.placePieceOnField(35, player2);
+
+        expect(emitted1[0]).to.equal(35);
+        expect(emitted1[1]).to.equal(player2);
+        expect(emitted2[0]).to.equal(35);
+        expect(emitted2[1]).to.equal(player2);
     });
 
     // Test:
     it('addGameBoardListener(index) should add a listener that will be notified if the game board was cleared' , () => {
-        let emitted: boolean = false;
+        let emitted1: boolean = false;
+        let listener1 = mockListener(() => {}, () => emitted1 = true);
+        gameBoard.addGameBoardListener(listener1);
 
-        let listener: GameBoardListener = new class implements GameBoardListener {
-            onPiecePlaced(index: number, player: Player): void {
-            }
-            onGameBoardCleared(): void {
-                emitted = true;
-            }
-        }
-
-        gameBoard.addGameBoardListener(listener);
         gameBoard.clearAllFields();
 
-        expect(emitted).to.equal(true);
+        expect(emitted1).to.equal(true);
+    });
+
+    // Test:
+    it('addGameBoardListener(index) should add multiple listeners that will all be notified if the game board was cleared' , () => {
+        let emitted1: boolean = false;
+        let listener1 = mockListener(() => {}, () => emitted1 = true);
+        gameBoard.addGameBoardListener(listener1);
+
+        let emitted2: boolean = false;
+        let listener2 = mockListener(() => {}, () => emitted2 = true);
+        gameBoard.addGameBoardListener(listener2);
+
+        gameBoard.clearAllFields();
+
+        expect(emitted1).to.equal(true);
+        expect(emitted2).to.equal(true);
     });
 
 
     // ---- removeGameBoardListener(listener):
 
     // Test:
-    it('removeGameBoardListener(index) should remove the listener and should not be notified if piece was placed' , () => {
-        let emitted: boolean = false;
+    it('removeGameBoardListener(index) should remove only this listener and other listener get notified for placed pieces' , () => {
+        let emitted1: boolean = false;
+        let listener1 = mockListener(() => emitted1 = true, () => {});
+        gameBoard.addGameBoardListener(listener1);
 
-        let listener: GameBoardListener = new class implements GameBoardListener {
-            onPiecePlaced(index: number, player: Player): void {
-                emitted = true;
-            }
-            onGameBoardCleared(): void {
-            }
-        }
+        let emitted2: boolean = false;
+        let listener2 = mockListener(() => emitted2 = true, () => {});
+        gameBoard.addGameBoardListener(listener2);
 
-        gameBoard.addGameBoardListener(listener);
-        gameBoard.removeGameBoardListener(listener);
+        gameBoard.removeGameBoardListener(listener1);
+
         gameBoard.placePieceOnField(20, player1);
 
-        expect(emitted).to.equal(false);
+        expect(emitted1).to.equal(false);
+        expect(emitted2).to.equal(true);
     });
 
     // Test:
-    it('removeGameBoardListener(index) should remove the listener and should not be notified if game board was cleared' , () => {
-        let emitted: boolean = false;
+    it('removeGameBoardListener(index) should remove only this listener and other listener get notified for game board cleared' , () => {
+        let emitted1: boolean = false;
+        let listener1 = mockListener(() => {}, () => emitted1 = true);
+        gameBoard.addGameBoardListener(listener1);
 
-        let listener: GameBoardListener = new class implements GameBoardListener {
-            onPiecePlaced(index: number, player: Player): void {
-            }
-            onGameBoardCleared(): void {
-                emitted = true;
-            }
-        }
+        let emitted2: boolean = false;
+        let listener2 = mockListener(() => {}, () => emitted2 = true);
+        gameBoard.addGameBoardListener(listener2);
 
-        gameBoard.addGameBoardListener(listener);
-        gameBoard.removeGameBoardListener(listener);
+        gameBoard.removeGameBoardListener(listener1);
+
         gameBoard.clearAllFields();
 
-        expect(emitted).to.equal(false);
+        expect(emitted1).to.equal(false);
+        expect(emitted2).to.equal(true);
     });
 
 });

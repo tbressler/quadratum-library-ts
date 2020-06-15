@@ -4,6 +4,7 @@ import {GameBoardListener} from "./GameBoardListener";
 
 /**
  * A model for the game board.
+ * A game board has 8 x 8 fields (with index 0 to 63) and 2 players.
  *
  * @author Tobias Breßler
  * @version 1.0
@@ -59,7 +60,7 @@ export class GameBoard {
         let fieldValue = (player == this.player1) ? 1 : 2;
         this.board[index] = fieldValue;
 
-        // Notify listeners.
+        // Notify all listeners.
         this.fireOnPiecePlaced(index, player);
     }
 
@@ -106,7 +107,7 @@ export class GameBoard {
     public clearAllFields(): void {
         this.board = [];
 
-        // Notify listeners.
+        // Notify all listeners.
         this.fireOnGameBoardCleared();
     }
 
@@ -114,16 +115,18 @@ export class GameBoard {
     /**
      * Adds a listener to the game board.
      *
-     * @param listener The listener.
+     * @param listener The listener that should be added.
      */
     public addGameBoardListener(listener: GameBoardListener): void {
         this.listeners.push(listener);
     }
 
+    /* Notifies all listeners that a piece was placed. */
     private fireOnPiecePlaced(index: number, player: Player) {
         this.listeners.forEach(l => l.onPiecePlaced(index, player));
     }
 
+    /* Notifies all listeners that the game board was cleared. */
     private fireOnGameBoardCleared() {
         this.listeners.forEach(l => l.onGameBoardCleared());
     }
@@ -131,7 +134,7 @@ export class GameBoard {
     /**
      * Removes a listener from the game board.
      *
-     * @param listener The listener.
+     * @param listener The listener that should be removed.
      */
     public removeGameBoardListener(listener: GameBoardListener): void {
         this.listeners = this.listeners.filter(l => l !== listener);
