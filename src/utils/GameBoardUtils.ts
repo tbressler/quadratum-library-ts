@@ -17,8 +17,8 @@ export class GameBoardUtils {
      * @return The corresponding index, between 0..63.
      */
     public static toIndex(x: number, y: number): number {
-        if ((!GameBoardUtils.isInt(x)) || (x < 0) || (x > 7)) throw new Error("x must be an integer and between 0..7!");
-        if ((!GameBoardUtils.isInt(y)) || (y < 0) || (y > 7)) throw new Error("y must be an integer and between 0..7!");
+        if ((!GameBoardUtils.isInt(x)) || (x < 0) || (x > 7)) throw new Error('x must be an integer and between 0..7!');
+        if ((!GameBoardUtils.isInt(y)) || (y < 0) || (y > 7)) throw new Error('y must be an integer and between 0..7!');
         return (y * 8) + x;
     }
 
@@ -72,7 +72,7 @@ export class GameBoardUtils {
      *
      * @param index The index.
      */
-    private static assertIndex(index: number): void {
+    public static assertIndex(index: number): void {
         if (!GameBoardUtils.isInt(index) || (index < 0) || (index > 63)) throw Error('index must be an integer and between 0..63!');
     }
 

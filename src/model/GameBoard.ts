@@ -1,4 +1,5 @@
 import {Player} from "./Player";
+import {GameBoardUtils} from "../utils/GameBoardUtils";
 
 /**
  * A model for the game board.
@@ -13,6 +14,10 @@ export class GameBoard {
 
     /* Player two. */
     private readonly player2: Player;
+
+    /* The fields of the game board. */
+    private board: number[] = [];
+
 
     /**
      * Creates a game board with the two given players.
@@ -43,14 +48,30 @@ export class GameBoard {
      * @param index The field index, between 0 and 63.
      * @param player The player that places the piece (must be player 1 or 2 of course).
      */
-    public placePiece(index: number, player: Player): void {
+    public placePieceOnField(index: number, player: Player): void {
         this.checkPlacePiecePrecondition(index, player);
     }
 
     /* Checks the preconditions for placing a piece on the game board. */
     private checkPlacePiecePrecondition(index: number, player: Player): void {
-        console.log(index);
-        console.log(player);
+        // Check if player is valid.
+        if ((player !== this.player1) || (player !== this.player2)) throw new Error('Player is invalid!');
+        // Check if index is valid (between 0 and 63).
+        GameBoardUtils.assertIndex(index);
+        // Check if field is empty.
+        if (!this.isFieldEmpty(index)) throw new Error('Field on game board is not empty!');
+    }
+
+
+    /**
+     * Returns true if the field is empty. Otherwise this method returns false.
+     *
+     * @param index The field index, between 0 and 63.
+     * @return True if the field is empty or false.
+     */
+    public isFieldEmpty(index: number): boolean {
+        GameBoardUtils.assertIndex(index);
+        return (!this.board[index]);
     }
 
 }

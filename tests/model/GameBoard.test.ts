@@ -53,4 +53,28 @@ describe('GameBoard class', () => {
         expect(gameBoard.getPlayer2).to.equal(player2);
     });
 
+
+    // ---- placePieceOnField(index, player):
+
+    // Test:
+    it('should throw an error if index lower than 0' , () => {
+        expect(() => gameBoard.placePieceOnField(-1, player1)).to.throw(Error);
+    });
+
+    // Test:
+    it('should throw an error if index greater than 63' , () => {
+        expect(() => gameBoard.placePieceOnField(64, player1)).to.throw(Error);
+    });
+
+    // Test:
+    it('should throw an error if index is 3.5 (floating point number)' , () => {
+        expect(() => gameBoard.placePieceOnField(3.5, player1)).to.throw(Error);
+    });
+
+    // Test:
+    it('should throw an error if player is invalid' , () => {
+        let player3 = new Player('some other player');
+        expect(() => gameBoard.placePieceOnField(3, player3)).to.throw(Error);
+    });
+
 });

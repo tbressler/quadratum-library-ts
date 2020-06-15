@@ -254,4 +254,22 @@ describe('GameBoardUtils class', () => {
         expect(() => GameBoardUtils.distY(3.5, 9)).to.throw(Error);
     });
 
+
+    // ---- assertIndex(index):
+
+    // Test:
+    it('method assertIndex(index) should throw an error with 3.5 (floating point number)' , () => {
+        expect(() => GameBoardUtils.assertIndex(3.5)).to.throw(Error);
+    });
+
+    // Test:
+    it('method assertIndex(index) should throw an error with index lower than 0' , () => {
+        expect(() => GameBoardUtils.assertIndex(-1)).to.throw(Error);
+    });
+
+    // Test:
+    it('method assertIndex(index) should throw an error with index greater than 63' , () => {
+        expect(() => GameBoardUtils.assertIndex(64)).to.throw(Error);
+    });
+
 });
