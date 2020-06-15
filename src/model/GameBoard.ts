@@ -50,16 +50,32 @@ export class GameBoard {
      */
     public placePieceOnField(index: number, player: Player): void {
         this.checkPlacePiecePrecondition(index, player);
+        let fieldValue = (player == this.player1) ? 1 : 2;
+        this.board[index] = fieldValue;
     }
 
     /* Checks the preconditions for placing a piece on the game board. */
     private checkPlacePiecePrecondition(index: number, player: Player): void {
         // Check if player is valid.
-        if ((player !== this.player1) || (player !== this.player2)) throw new Error('Player is invalid!');
+        if ((player !== this.player1) && (player !== this.player2)) throw new Error('Player is invalid!');
         // Check if index is valid (between 0 and 63).
         GameBoardUtils.assertIndex(index);
         // Check if field is empty.
         if (!this.isFieldEmpty(index)) throw new Error('Field on game board is not empty!');
+    }
+
+
+    /**
+     * Returns the player who placed the piece on the game board or null if no piece was placed
+     * on the given field.
+     *
+     * @param index The field index, between 0 and 63.
+     * @return The player who placed the piece or null if no piece was placed.
+     */
+    public getPieceFromField(index: number): Player | null {
+        if (this.isFieldEmpty(index))
+            return null;
+        return (this.board[index] == 1) ? this.player1 : this.player2;
     }
 
 
