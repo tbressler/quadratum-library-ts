@@ -1,5 +1,6 @@
 import {Player} from "./Player";
 import {GameBoardUtils} from "../utils/GameBoardUtils";
+import {GameBoardListener} from "./GameBoardListener";
 
 /**
  * A model for the game board.
@@ -17,6 +18,9 @@ export class GameBoard {
 
     /* The fields of the game board. */
     private board: number[] = [];
+
+    /* The listeners for the game board. */
+    private listeners: GameBoardListener[] = [];
 
 
     /**
@@ -50,8 +54,13 @@ export class GameBoard {
      */
     public placePieceOnField(index: number, player: Player): void {
         this.checkPlacePiecePrecondition(index, player);
+
+        // Place piece on field.
         let fieldValue = (player == this.player1) ? 1 : 2;
         this.board[index] = fieldValue;
+
+        // Notify listeners.
+        this.fireOnPiecePlaced(index, player);
     }
 
     /* Checks the preconditions for placing a piece on the game board. */
@@ -88,6 +97,44 @@ export class GameBoard {
     public isFieldEmpty(index: number): boolean {
         GameBoardUtils.assertIndex(index);
         return (!this.board[index]);
+    }
+
+
+    /**
+     * Clears all fields of the game board.
+     */
+    public clearAllFields(): void {
+        this.board = [];
+
+        // Notify listeners.
+        this.fireOnGameBoardCleared();
+    }
+
+
+    /**
+     * Adds a listener to the game board.
+     *
+     * @param listener The listener.
+     */
+    public addGameBoardListener(listener: GameBoardListener): void {
+        this.listeners.push(listener);
+    }
+
+    private fireOnPiecePlaced(index: number, player: Player) {
+        this.listeners.forEach(l => l.onPiecePlaced(index, player));
+    }
+
+    private fireOnGameBoardCleared() {
+        this.listeners.forEach(l => l.onGameBoardCleared());
+    }
+
+    /**
+     * Removes a listener from the game board.
+     *
+     * @param listener The listener.
+     */
+    public removeGameBoardListener(listener: GameBoardListener): void {
+        this.listeners = this.listeners.filter(l => l !== listener);
     }
 
 }

@@ -2,6 +2,7 @@ import * as chai from 'chai';
 
 import {GameBoard} from "../../src/model/GameBoard";
 import {Player} from "../../src/model/Player";
+import {GameBoardListener} from "../../src/model/GameBoardListener";
 
 const expect = chai.expect;
 describe('GameBoard class', () => {
@@ -168,9 +169,98 @@ describe('GameBoard class', () => {
     });
 
 
-    // ---- clearFields():
+    // ---- clearAllFields():
 
     // Test:
+    it('clearAllFields(index) should clear all fields' , () => {
+        gameBoard.placePieceOnField(63, player1);
+        gameBoard.placePieceOnField(13, player2);
 
+        gameBoard.clearAllFields();
+
+        for (let i: number = 0; i<=63; i++)
+            expect(gameBoard.isFieldEmpty(i)).to.equal(true);
+    });
+
+
+    // ---- addGameBoardListener(listener):
+
+    // Test:
+    it('addGameBoardListener(index) should add a listener that will be notified if a piece was placed' , () => {
+        let emitted: [number?, Player?] = [];
+
+        let listener: GameBoardListener = new class implements GameBoardListener {
+            onPiecePlaced(index: number, player: Player): void {
+                emitted = [index, player];
+            }
+            onGameBoardCleared(): void {
+            }
+        }
+
+        gameBoard.addGameBoardListener(listener);
+        gameBoard.placePieceOnField(20, player1);
+
+        expect(emitted[0]).to.equal(20);
+        expect(emitted[1]).to.equal(player1);
+    });
+
+    // Test:
+    it('addGameBoardListener(index) should add a listener that will be notified if the game board was cleared' , () => {
+        let emitted: boolean = false;
+
+        let listener: GameBoardListener = new class implements GameBoardListener {
+            onPiecePlaced(index: number, player: Player): void {
+            }
+            onGameBoardCleared(): void {
+                emitted = true;
+            }
+        }
+
+        gameBoard.addGameBoardListener(listener);
+        gameBoard.clearAllFields();
+
+        expect(emitted).to.equal(true);
+    });
+
+
+    // ---- removeGameBoardListener(listener):
+
+    // Test:
+    it('removeGameBoardListener(index) should remove the listener and should not be notified if piece was placed' , () => {
+        let emitted: boolean = false;
+
+        let listener: GameBoardListener = new class implements GameBoardListener {
+            onPiecePlaced(index: number, player: Player): void {
+                emitted = true;
+            }
+            onGameBoardCleared(): void {
+            }
+        }
+
+        gameBoard.addGameBoardListener(listener);
+        gameBoard.removeGameBoardListener(listener);
+        gameBoard.placePieceOnField(20, player1);
+
+        expect(emitted).to.equal(false);
+    });
+
+    // Test:
+    it('removeGameBoardListener(index) should remove the listener and should not be notified if game board was cleared' , () => {
+        let emitted: boolean = false;
+
+        let listener: GameBoardListener = new class implements GameBoardListener {
+            onPiecePlaced(index: number, player: Player): void {
+            }
+            onGameBoardCleared(): void {
+                emitted = true;
+            }
+        }
+
+        gameBoard.addGameBoardListener(listener);
+        gameBoard.removeGameBoardListener(listener);
+        gameBoard.clearAllFields();
+
+        expect(emitted).to.equal(false);
+    });
 
 });
