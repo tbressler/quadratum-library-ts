@@ -9,12 +9,10 @@ describe('GameBoard class', () => {
     // ---- Test setup:
     let player1 = new Player('player 1');
     let player2 = new Player('player 2');
-
     let gameBoard: GameBoard;
-
-    function setupTest(): void {
+    beforeEach(function () {
         gameBoard = new GameBoard(player1, player2);
-    }
+    });
 
 
     // ---- constructor():
@@ -47,8 +45,6 @@ describe('GameBoard class', () => {
 
     // Test:
     it('getPlayer1() should have a player 1' , () => {
-        setupTest();
-
         expect(gameBoard.getPlayer1).to.equal(player1);
     });
 
@@ -57,8 +53,6 @@ describe('GameBoard class', () => {
 
     // Test:
     it('getPlayer2() should have a player 2' , () => {
-        setupTest();
-
         expect(gameBoard.getPlayer2).to.equal(player2);
     });
 
@@ -67,16 +61,12 @@ describe('GameBoard class', () => {
 
     // Test:
     it('placePieceOnField(index, player) should place a piece on the given field' , () => {
-        setupTest();
-
         gameBoard.placePieceOnField(1, player1);
         expect(gameBoard.getPieceFromField(1)).to.equal(player1);
     });
 
     // Test:
     it('placePieceOnField(index, player) should place a piece for each player on the given field' , () => {
-        setupTest();
-
         gameBoard.placePieceOnField(1, player1);
         gameBoard.placePieceOnField(2, player2);
 
@@ -86,8 +76,6 @@ describe('GameBoard class', () => {
 
     // Test:
     it('placePieceOnField(index, player) should throw an error if piece placed one same field' , () => {
-        setupTest();
-
         gameBoard.placePieceOnField(22, player1);
 
         expect(() => gameBoard.placePieceOnField(22, player2)).to.throw(Error);
@@ -95,29 +83,21 @@ describe('GameBoard class', () => {
 
     // Test:
     it('placePieceOnField(index, player) should throw an error if index lower than 0' , () => {
-        setupTest();
-
         expect(() => gameBoard.placePieceOnField(-1, player1)).to.throw(Error);
     });
 
     // Test:
     it('placePieceOnField(index, player) should throw an error if index greater than 63' , () => {
-        setupTest();
-
         expect(() => gameBoard.placePieceOnField(64, player1)).to.throw(Error);
     });
 
     // Test:
     it('placePieceOnField(index, player) should throw an error if index is 3.5 (floating point number)' , () => {
-        setupTest();
-
         expect(() => gameBoard.placePieceOnField(3.5, player1)).to.throw(Error);
     });
 
     // Test:
     it('placePieceOnField(index, player) should throw an error if player is invalid' , () => {
-        setupTest();
-
         let player3 = new Player('some other player');
         expect(() => gameBoard.placePieceOnField(3, player3)).to.throw(Error);
     });
@@ -127,15 +107,11 @@ describe('GameBoard class', () => {
 
     // Test:
     it('getPieceFromField(index) should return null for empty fields' , () => {
-        setupTest();
-
         expect(gameBoard.getPieceFromField(0)).to.null;
     });
 
     // Test:
     it('getPieceFromField(index) should returns player for fields where the player placed a piece' , () => {
-        setupTest();
-
         gameBoard.placePieceOnField(22, player1);
         gameBoard.placePieceOnField(25, player2);
 
@@ -145,19 +121,16 @@ describe('GameBoard class', () => {
 
     // Test:
     it('getPieceFromField(index) should throw an error if index is lower than 0' , () => {
-        setupTest();
         expect(() => gameBoard.getPieceFromField(-1)).to.throw(Error);
     });
 
     // Test:
     it('getPieceFromField(index) should throw an error if index is greater than 63' , () => {
-        setupTest();
         expect(() => gameBoard.getPieceFromField(64)).to.throw(Error);
     });
 
     // Test:
     it('getPieceFromField(index) should throw an error if index is 15.6 (floating point number)' , () => {
-        setupTest();
         expect(() => gameBoard.getPieceFromField(15.6)).to.throw(Error);
     });
 
@@ -166,33 +139,27 @@ describe('GameBoard class', () => {
 
     // Test:
     it('isFieldEmpty(index) should throw an error if index is lower than 0' , () => {
-        setupTest();
         expect(() => gameBoard.isFieldEmpty(-1)).to.throw(Error);
     });
 
     // Test:
     it('isFieldEmpty(index) should throw an error if index is greater than 63' , () => {
-        setupTest();
         expect(() => gameBoard.isFieldEmpty(64)).to.throw(Error);
     });
 
     // Test:
     it('isFieldEmpty(index) should throw an error if index is 12.92 (floating point number)' , () => {
-        setupTest();
         expect(() => gameBoard.isFieldEmpty(12.92)).to.throw(Error);
     });
 
     // Test:
     it('isFieldEmpty(index) should return true for all fields if no piece was placed before' , () => {
-        setupTest();
         for (let i: number = 0; i<=63; i++)
             expect(gameBoard.isFieldEmpty(i)).to.equal(true);
     });
 
     // Test:
     it('isFieldEmpty(index) should return false for a fields with pieces' , () => {
-        setupTest();
-
         gameBoard.placePieceOnField(20, player1);
         gameBoard.placePieceOnField(12, player2);
 
