@@ -1,4 +1,5 @@
 import {Player} from "./Player";
+import {SquareUtils} from "../utils/SquareUtils";
 
 /** A simple data type for the 4 pieces of a square. */
 export type quadruple = [number, number, number, number];
@@ -29,8 +30,9 @@ export class Square {
      * @param player  The player that scored this square.
      */
     public constructor(fields: quadruple, player: Player) {
-        this.fields = fields;
-        this.score = 0;
+        if (!SquareUtils.isSquare(fields)) throw new Error('Fields must form a square!');
+        this.fields = fields.sort();
+        this.score = SquareUtils.score(fields);
         this.player = player;
     }
 
