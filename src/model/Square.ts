@@ -1,9 +1,11 @@
 import {Player} from "./Player";
 
-type SquareFields = [number, number, number, number];
+/** A simple data type for the 4 pieces of a square. */
+export type quadruple = [number, number, number, number];
+
 
 /**
- * A square, which consists of 4 pieces of one player.
+ * A square which consists of 4 pieces of one player.
  *
  * @author Tobias Breßler
  * @version 1.0
@@ -11,7 +13,7 @@ type SquareFields = [number, number, number, number];
 export class Square {
 
     /* The fields with the pieces of the square. */
-    private readonly fields : SquareFields;
+    private readonly fields : quadruple;
 
     /* The score of the square. */
     private readonly score: number;
@@ -26,7 +28,7 @@ export class Square {
      * @param fields The 4 fields with the pieces of the square.
      * @param player  The player that scored this square.
      */
-    public constructor(fields: SquareFields, player: Player) {
+    public constructor(fields: quadruple, player: Player) {
         this.fields = fields;
         this.score = 0;
         this.player = player;
@@ -38,7 +40,7 @@ export class Square {
      *
      * @return The field indexes of the pieces as sorted array.
      */
-    public getSortedFields(): SquareFields {
+    public getSortedFields(): quadruple {
         return this.fields;
     }
 
