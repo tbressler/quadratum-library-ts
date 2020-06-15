@@ -1,20 +1,27 @@
 /**
- * A player.
+ * A model for the player.
  *
  * @author Tobias Breßler
  * @version 1.0
  */
 export class Player {
 
+    /* The name of the player. */
     private readonly name: string;
 
-    get getName() {
-        return this.name;
+    /**
+     * Creates a player.
+     *
+     * @param name The name of the player, must not be null or empty.
+     */
+    constructor(name: string) {
+        if (!name) throw new Error('The player name is empty!');
+        this.name = name;
     }
 
-    constructor(name: string) {
-        if (!name) throw new Error('no name given');
-        this.name = name;
+    /** Returns the name of the player. */
+    get getName() {
+        return this.name;
     }
 
 }
