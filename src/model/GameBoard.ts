@@ -36,4 +36,21 @@ export class GameBoard {
         return this.player2;
     }
 
+
+    /**
+     * Place a piece on the game board.
+     *
+     * @param index The field index, between 0 and 63.
+     * @param player The player that places the piece (must be player 1 or 2 of course).
+     */
+    public placePiece(index: number, player: Player): void {
+        this.checkPlacePiecePrecondition(index, player);
+    }
+
+    /* Checks the preconditions for placing a piece on the game board. */
+    private checkPlacePiecePrecondition(index: number, player: Player): void {
+        console.log(index);
+        console.log(player);
+    }
+
 }
