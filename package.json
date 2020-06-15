@@ -2,7 +2,7 @@
   "name": "quadratum-library-ts",
   "version": "1.0.0",
   "description": "A library for the game Quadratum.",
-  "main": "index.js",
+  "private": true,
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,10 +10,16 @@
     "type": "git",
     "url": "git+https://github.com/tbressler/quadratum-library-ts.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Tobias Breßler",
+  "license": "Apache License 2.0",
+  "homepage": "https://github.com/tbressler/quadratum-library-ts#readme",
   "bugs": {
     "url": "https://github.com/tbressler/quadratum-library-ts/issues"
   },
-  "homepage": "https://github.com/tbressler/quadratum-library-ts#readme"
+  "devDependencies": {
+    "ts-loader": "^7.0.5",
+    "typescript": "^3.9.5",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
 }
