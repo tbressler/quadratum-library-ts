@@ -22,6 +22,7 @@ export class GameBoardUtils {
         return (y * 8) + x;
     }
 
+
     /**
      * Converts the given index to the corresponding x-y coordinates.
      *
@@ -29,9 +30,52 @@ export class GameBoardUtils {
      * @return The corresponding x and y coordinates in the form [x, y].
      */
     public static toCoords(index: number): [number, number] {
-        if (!GameBoardUtils.isInt(index) || (index < 0) || (index > 63)) throw new Error("index must be an integer and between 0..63!");
+        GameBoardUtils.assertIndex(index);
         return [(index % 8), (index - (index % 8)) / 8];
     }
+
+
+    /**
+     * Returns the difference of the x coordinates.
+     *
+     * @param index1 The index of the first piece, between 0..63.
+     * @param index2 The index of the second piece, between 0..63.
+     * @return The difference of the x coordinates, between 0..7.
+     */
+    public static distX(index1: number, index2: number): number {
+        GameBoardUtils.assertIndex(index1);
+        GameBoardUtils.assertIndex(index2);
+        let [x1,] = GameBoardUtils.toCoords(index1);
+        let [x2,] = GameBoardUtils.toCoords(index2);
+        return x2 - x1;
+    }
+
+    /**
+     * Returns the difference of the y coordinates.
+     *
+     * @param index1 The index of the first piece, between 0..63.
+     * @param index2 The index of the second piece, between 0..63.
+     * @return The difference of the x coordinates, between 0..7.
+     */
+    public static distY(index1: number, index2: number): number {
+        GameBoardUtils.assertIndex(index1);
+        GameBoardUtils.assertIndex(index2);
+        let [,y1] = GameBoardUtils.toCoords(index1);
+        let [,y2] = GameBoardUtils.toCoords(index2);
+        return y2 - y1;
+    }
+
+
+    /**
+     * Asserts if index is an integer and between 0 and 63.
+     * If not the method throws an error exception.
+     *
+     * @param index The index.
+     */
+    private static assertIndex(index: number): void {
+        if (!GameBoardUtils.isInt(index) || (index < 0) || (index > 63)) throw Error('index must be an integer and between 0..63!');
+    }
+
 
     /**
      * Checks if the given value is an integer. Returns false if it is not an integer.

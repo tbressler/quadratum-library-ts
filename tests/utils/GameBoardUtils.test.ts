@@ -5,6 +5,8 @@ import {GameBoardUtils} from "../../src/utils/GameBoardUtils";
 const expect = chai.expect;
 describe('GameBoardUtils class', () => {
 
+    // ---- isInt(value):
+
     // Test:
     it('method isInt(value) should return true for 0' , () => {
         expect(GameBoardUtils.isInt(0)).to.equal(true);
@@ -25,6 +27,8 @@ describe('GameBoardUtils class', () => {
         expect(GameBoardUtils.isInt(7.5)).to.equal(false);
     });
 
+
+    // ---- toIndex(x,y):
 
     // Test:
     it('method toIndex(x,y) should return 0 for x=0 and y=0' , () => {
@@ -87,6 +91,8 @@ describe('GameBoardUtils class', () => {
     });
 
 
+    // ---- toCoords(index):
+
     // Test:
     it('method toCoords(index) should return [0,0] for 0' , () => {
         expect(GameBoardUtils.toCoords(0)).to.deep.equal([0, 0]);
@@ -135,6 +141,117 @@ describe('GameBoardUtils class', () => {
     // Test:
     it('method toCoords(index) should throw an Error if index is greater than 63' , () => {
         expect(() => GameBoardUtils.toCoords(64)).to.throw(Error);
+    });
+
+
+    // ---- distX(index,index):
+
+    // Test:
+    it('method distX(index,index) should return 0 for same indexes' , () => {
+        expect(GameBoardUtils.distX(9, 9)).to.equal(0);
+    });
+
+    // Test:
+    it('method distX(index,index) should return 1 for 9 and 10' , () => {
+        expect(GameBoardUtils.distX(9, 10)).to.equal(1);
+    });
+
+    // Test:
+    it('method distX(index,index) should return 3 for 9 and 20' , () => {
+        expect(GameBoardUtils.distX(9, 20)).to.equal(3);
+    });
+
+    // Test:
+    it('method distX(index,index) should return 0 for 9 and 17' , () => {
+        expect(GameBoardUtils.distX(9, 17)).to.equal(0);
+    });
+
+    // Test:
+    it('method distX(index,index) should return 0 for 9 and 17' , () => {
+        expect(GameBoardUtils.distX(9, 17)).to.equal(0);
+    });
+
+    // Test:
+    it('method distX(index,index) should throw an error with index1 lower than 0' , () => {
+        expect(() => GameBoardUtils.distX(-1, 5)).to.throw(Error);
+    });
+
+    // Test:
+    it('method distX(index,index) should throw an error with index1 greater than 63' , () => {
+        expect(() => GameBoardUtils.distX(64, 5)).to.throw(Error);
+    });
+
+    // Test:
+    it('method distX(index,index) should throw an error with index2 lower than 0' , () => {
+        expect(() => GameBoardUtils.distX(5, -1)).to.throw(Error);
+    });
+
+    // Test:
+    it('method distX(index,index) should throw an error with index2 greater than 63' , () => {
+        expect(() => GameBoardUtils.distX(5, 64)).to.throw(Error);
+    });
+
+    // Test:
+    it('method distX(index,index) should throw an error with 9 and 3.5 (floating point number)' , () => {
+        expect(() => GameBoardUtils.distX(9, 3.5)).to.throw(Error);
+    });
+
+    // Test:
+    it('method distX(index,index) should throw an error with 3.5 (floating point number) and 9' , () => {
+        expect(() => GameBoardUtils.distX(3.5, 9)).to.throw(Error);
+    });
+
+
+    // ---- distY(index,index):
+
+    // Test:
+    it('method distY(index,index) should return 0 for same indexes' , () => {
+        expect(GameBoardUtils.distY(9, 9)).to.equal(0);
+    });
+
+    // Test:
+    it('method distY(index,index) should return 0 for 9 and 10' , () => {
+        expect(GameBoardUtils.distY(9, 10)).to.equal(0);
+    });
+
+    // Test:
+    it('method distY(index,index) should return 1 for 9 and 17' , () => {
+        expect(GameBoardUtils.distY(9, 17)).to.equal(1);
+    });
+
+    // Test:
+    it('method distY(index,index) should return 3 for 9 and 36' , () => {
+        expect(GameBoardUtils.distY(9, 36)).to.equal(3);
+    });
+
+    // Test:
+    it('method distY(index,index) should throw an error with index1 lower than 0' , () => {
+        expect(() => GameBoardUtils.distY(-1, 5)).to.throw(Error);
+    });
+
+    // Test:
+    it('method distY(index,index) should throw an error with index1 greater than 63' , () => {
+        expect(() => GameBoardUtils.distY(64, 5)).to.throw(Error);
+    });
+
+    // Test:
+    it('method distY(index,index) should throw an error with index2 lower than 0' , () => {
+        expect(() => GameBoardUtils.distY(5, -1)).to.throw(Error);
+    });
+
+    // Test:
+    it('method distY(index,index) should throw an error with index2 greater than 63' , () => {
+        expect(() => GameBoardUtils.distY(5, 64)).to.throw(Error);
+    });
+
+    // Test:
+    it('method distY(index,index) should throw an error with 9 and 3.5 (floating point number)' , () => {
+        expect(() => GameBoardUtils.distY(9, 3.5)).to.throw(Error);
+    });
+
+    // Test:
+    it('method distY(index,index) should throw an error with 3.5 (floating point number) and 9' , () => {
+        expect(() => GameBoardUtils.distY(3.5, 9)).to.throw(Error);
     });
 
 });
