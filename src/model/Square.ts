@@ -1,5 +1,6 @@
 import {Player} from "./Player";
 import {SquareUtils} from "../utils/SquareUtils";
+import {Hashable} from "../utils/HashSet";
 
 /** A simple data type for the 4 pieces of a square. */
 export type quadruple = [number, number, number, number];
@@ -11,7 +12,7 @@ export type quadruple = [number, number, number, number];
  * @author Tobias Breßler
  * @version 1.0
  */
-export class Square {
+export class Square implements Hashable {
 
     /* The fields with the pieces of the square. */
     private readonly fields : quadruple;
@@ -64,6 +65,36 @@ export class Square {
      */
     public getPlayer(): Player {
         return this.player;
+    }
+
+
+    /**
+     * Returns a hash code value for the object. This method is supported for the benefit of
+     * hash sets.
+     *
+     * @return A hash code value for this object.
+     */
+    public hashCode(): number {
+        let result = this.hashCodeForArray(this.fields);
+        result = Math.imul(31, result) + this.hashCodeForString(this.player.getName)
+        return result;
+    }
+
+    /* Returns the hash code for an array. */
+    private hashCodeForArray(elements: number[]): number {
+        let result = 1;
+        elements.forEach((value) => {
+            result = Math.imul(31, result) + value;
+        });
+        return result;
+    }
+
+    /* Returns the hash code for a string. */
+    private hashCodeForString(element: string): number {
+        let result = 0;
+        for(let i = 0; i < element.length; i++)
+            result = Math.imul(31, result) + element.charCodeAt(i) | 0;
+        return result;
     }
 
 }
