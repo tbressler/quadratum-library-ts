@@ -6,6 +6,7 @@ import {SquareCollector} from "./SquareCollector";
 import {GameOverState, GameOverVerifier} from "./GameOverVerifier";
 import {LogicCallback} from "./LogicCallback";
 import {Square} from "../model/Square";
+import {GameBoardUtils} from "../utils/GameBoardUtils";
 
 /**
  * The game logic.
@@ -70,34 +71,33 @@ export class GameLogic {
 
     /* Initializes the logic callback. */
     private initLogicCallback(): LogicCallback {
-        const parentThis = this;
+        const _parent = this;
         return  new class implements LogicCallback {
 
             public makeMove(index: number, player: Player): boolean {
-                if (!parentThis.isGameStarted())
+                if (!_parent.isGameStarted())
                     throw new Error('Game is not started!');
-                if (player != parentThis.activePlayerLogic!.getPlayer())
+                if (player != _parent.activePlayerLogic!.getPlayer())
                     throw new Error('The player is not active!');
-                if ((index < 0) || (index > 63))
-                    throw new Error('Index must be between 0 and 63!');
+                GameBoardUtils.assertIndex(index);
 
-                if (!parentThis.gameBoard.isFieldEmpty(index))
+                if (!_parent.gameBoard.isFieldEmpty(index))
                     return false;
 
-                parentThis.gameBoard.placePieceOnField(index, player);
+                _parent.gameBoard.placePieceOnField(index, player);
 
-                parentThis.checkGameBoardForSquares(player);
-                if (parentThis.checkIfGameIsOver())
+                _parent.checkGameBoardForSquares(player);
+                if (_parent.checkIfGameIsOver())
                     return true;
 
-                parentThis.switchActivePlayer();
+                _parent.switchActivePlayer();
 
                 return true;
             }
         };
     }
 
-    /* Checks if players of player logic and game board are corrent. */
+    /* Checks if players of player logic and game board are correct. */
     private checkPlayers(gameBoard: GameBoard, player1: Player, player2: Player): void {
         if (player1 == player2)
             throw new Error('playerLogic1 and playerLogic2 uses the same player!');
@@ -134,12 +134,6 @@ export class GameLogic {
         this.fireOnNewSquaresFound(player, foundSquares);
     }
 
-    /* Notifies listener about new squares. */
-    private fireOnNewSquaresFound(player: Player, foundSquares: Square[]): void {
-        this.listeners.forEach(l => l.onNewSquaresFound(player, foundSquares));
-    }
-
-
     /* Returns true if the game is over, otherwise false. */
     private checkIfGameIsOver(): boolean {
         switch(this.gameOverVerifier.isGameOver(this.gameBoard, this.squareCollector)) {
@@ -157,11 +151,6 @@ export class GameLogic {
             default:
                 throw new Error('Unknown game over state!');
         }
-    }
-
-    /* Notifies listeners that game is over and given player won. */
-    private fireOnGameOver(player: Player|null): void {
-        this.listeners.forEach(l => l.onGameOver(player));
     }
 
 
@@ -192,11 +181,6 @@ export class GameLogic {
             throw new Error('Player is unknown at the game board!');
     }
 
-    /* Notifies the game board listeners that the game has started. */
-    private fireOnGameStarted(activePlayer: Player): void {
-        this.listeners.forEach(l => l.onGameStarted(activePlayer));
-    }
-
     /* Switches the active player. */
     private switchActivePlayer(): void {
         if (this.activePlayerLogic == this.playerLogic1)
@@ -214,11 +198,6 @@ export class GameLogic {
 
         // Request move at the player logic.
         playerLogic.requestMove(this.gameBoard, this.playerLogicCallback);
-    }
-
-    /* Notifies all listeners that the active player has changed. */
-    private fireOnActivePlayerChanged(player: Player): void {
-        this.listeners.forEach(l => l.onActivePlayerChanged(player));
     }
 
 
@@ -301,6 +280,26 @@ export class GameLogic {
      */
     public addGameLogicListener(listener: GameLogicListener): void {
         this.listeners.push(listener);
+    }
+
+    /* Notifies the game board listeners that the game has started. */
+    private fireOnGameStarted(activePlayer: Player): void {
+        this.listeners.forEach(l => l.onGameStarted(activePlayer));
+    }
+
+    /* Notifies all listeners that the active player has changed. */
+    private fireOnActivePlayerChanged(player: Player): void {
+        this.listeners.forEach(l => l.onActivePlayerChanged(player));
+    }
+
+    /* Notifies listener about new squares. */
+    private fireOnNewSquaresFound(player: Player, foundSquares: Square[]): void {
+        this.listeners.forEach(l => l.onNewSquaresFound(player, foundSquares));
+    }
+
+    /* Notifies listeners that game is over and given player won. */
+    private fireOnGameOver(player: Player|null): void {
+        this.listeners.forEach(l => l.onGameOver(player));
     }
 
     /**
