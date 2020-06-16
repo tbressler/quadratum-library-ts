@@ -11,7 +11,8 @@ import {Square} from "../../src/model/Square";
 const expect = chai.expect;
 describe('GameLogic class', () => {
 
-    let _ignore = () => {};
+    // Simple placeholder to ignore callbacks.
+    let _ = () => {};
 
     // ---- Test setup:
     let player1 = new Player('player 1');
@@ -47,8 +48,8 @@ describe('GameLogic class', () => {
     // Test:
     it('constructor(gameboard,playerLogic1,playerLogic2) should throw an error if playerLogic1 has unknown player' , () => {
         let nonGameBoardPlayer = new Player('unknown player');
-        playerLogic1 = mockPlayerLogic(nonGameBoardPlayer, _ignore);
-        playerLogic2 = mockPlayerLogic(player2, _ignore);
+        playerLogic1 = mockPlayerLogic(nonGameBoardPlayer, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
 
         expect(() => new GameLogic(gameBoard, playerLogic1, playerLogic2)).to.throw(Error);
     });
@@ -56,7 +57,7 @@ describe('GameLogic class', () => {
     // Test:
     it('constructor(gameboard,playerLogic1,playerLogic2) should throw an error if playerLogic2 has unknown player' , () => {
         let nonGameBoardPlayer = new Player('unknown player');
-        playerLogic1 = mockPlayerLogic(player1, _ignore);
+        playerLogic1 = mockPlayerLogic(player1, _);
         playerLogic2 = mockPlayerLogic(nonGameBoardPlayer, () => {});
 
         expect(() => new GameLogic(gameBoard, playerLogic1, playerLogic2)).to.throw(Error);
@@ -64,16 +65,16 @@ describe('GameLogic class', () => {
 
     // Test:
     it('constructor(gameboard,playerLogic1,playerLogic2) should throw an error if both playerLogics have the same player 1' , () => {
-        playerLogic1 = mockPlayerLogic(player1, _ignore);
-        playerLogic2 = mockPlayerLogic(player1, _ignore);
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player1, _);
 
         expect(() => new GameLogic(gameBoard, playerLogic1, playerLogic2)).to.throw(Error);
     });
 
     // Test:
     it('constructor(gameboard,playerLogic1,playerLogic2) should throw an error if both playerLogics have the same player 2' , () => {
-        playerLogic1 = mockPlayerLogic(player2, _ignore);
-        playerLogic2 = mockPlayerLogic(player2, _ignore);
+        playerLogic1 = mockPlayerLogic(player2, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
 
         expect(() => new GameLogic(gameBoard, playerLogic1, playerLogic2)).to.throw(Error);
     });
@@ -83,8 +84,8 @@ describe('GameLogic class', () => {
 
     // Test:
     it('isGameStarted() should return false when game was not started before' , () => {
-        playerLogic1 = mockPlayerLogic(player1, _ignore);
-        playerLogic2 = mockPlayerLogic(player2, _ignore);
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
         gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
 
         expect(gameLogic.isGameStarted()).to.be.false;
@@ -92,8 +93,8 @@ describe('GameLogic class', () => {
 
     // Test:
     it('isGameStarted() should return true when game was started before' , () => {
-        playerLogic1 = mockPlayerLogic(player1, _ignore);
-        playerLogic2 = mockPlayerLogic(player2, _ignore);
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
         gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
 
         gameLogic.startGame(player1);
@@ -103,8 +104,8 @@ describe('GameLogic class', () => {
 
     // Test:
     it('isGameStarted() should return true when game was started before' , () => {
-        playerLogic1 = mockPlayerLogic(player1, _ignore);
-        playerLogic2 = mockPlayerLogic(player2, _ignore);
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
         gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
 
         gameLogic.startGame(player1);
@@ -112,17 +113,94 @@ describe('GameLogic class', () => {
         expect(gameLogic.isGameStarted()).to.be.true;
     });
 
+
+    // ---- startGame(player):
+
     // Test:
-    it('isGameStarted() should notify game logic listener' , () => {
-        playerLogic1 = mockPlayerLogic(player1, _ignore);
-        playerLogic2 = mockPlayerLogic(player2, _ignore);
+    it('startGame(player) should notify game logic listeners onGameStarted() with player1 when game was started with player1' , () => {
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
         gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
         let startNotified = false;
 
-        gameLogic.addGameLogicListener(mockGameLogicListener(_ignore, _ignore, () => { startNotified = true }, _ignore));
+        gameLogic.addGameLogicListener(mockGameLogicListener(_, _, (player) => {
+            if (player == player1) startNotified = true;
+        }, _));
         gameLogic.startGame(player1);
 
         expect(startNotified).to.be.true;
     });
+
+    // Test:
+    it('startGame(player) should notify game logic listeners onGameStarted() with player2 when game was started with player2' , () => {
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+        let startNotified = false;
+
+        gameLogic.addGameLogicListener(mockGameLogicListener(_, _, (player) => {
+            if (player == player2) startNotified = true;
+        }, _));
+        gameLogic.startGame(player2);
+
+        expect(startNotified).to.be.true;
+    });
+
+    // Test:
+    it('startGame(player) should throw an error for unknown players' , () => {
+        let nonGameBoardPlayer = new Player('unknown player');
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        expect(() => gameLogic.startGame(nonGameBoardPlayer)).to.throw(Error);
+    });
+
+
+    // ---- getActivePlayer():
+
+    // Test:
+    it('getActivePlayer() should return null if game was not started before' , () => {
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        expect(gameLogic.getActivePlayer()).to.be.null;
+    });
+
+    // Test:
+    it('getActivePlayer() should return player1 if game was started with player1' , () => {
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        gameLogic.startGame(player1);
+
+        expect(gameLogic.getActivePlayer()).to.equal(player1);
+    });
+
+    // Test:
+    it('getActivePlayer() should return player2 if game was started with player2' , () => {
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        gameLogic.startGame(player2);
+
+        expect(gameLogic.getActivePlayer()).to.equal(player2);
+    });
+
+
+    // ---- getGameBoard():
+
+    // Test:
+    it('getGameBoard() should return game board' , () => {
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        expect(gameLogic.getGameBoard()).to.equal(gameBoard);
+    });
+
 
 });

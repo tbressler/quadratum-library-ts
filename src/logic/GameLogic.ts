@@ -212,15 +212,6 @@ export class GameLogic {
         return this.activePlayerLogic.getPlayer();
     }
 
-    /**
-     * Returns the active player logic or null if the game has not started yet.
-     *
-     * @return The active player logic or null.
-     */
-    public getActivePlayerLogic(): PlayerLogic|null {
-        return this.activePlayerLogic;
-    }
-
 
     /**
      * Returns true if the game was started, otherwise the method returns false.
