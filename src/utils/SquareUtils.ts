@@ -19,7 +19,7 @@ export class SquareUtils {
      * @return True if the pieces are forming a valid square or false.
      */
     public static isSquare(pieces: quadruple): boolean {
-        pieces = pieces.sort();
+        pieces = pieces.sort((n1,n2) => n1-n2);
 
         let possiblePieces = SquareUtils.getPossiblePieces([pieces[0], pieces[1]]);
 

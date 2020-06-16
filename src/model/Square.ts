@@ -31,7 +31,7 @@ export class Square {
      */
     public constructor(fields: quadruple, player: Player) {
         if (!SquareUtils.isSquare(fields)) throw new Error('Fields must form a square!');
-        this.fields = fields.sort();
+        this.fields = fields.sort((n1,n2) => n1-n2);
         this.score = SquareUtils.score(fields);
         this.player = player;
     }
