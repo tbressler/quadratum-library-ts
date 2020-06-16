@@ -7,6 +7,7 @@ import {PlayerLogic} from "../../src/logic/PlayerLogic";
 import {LogicCallback} from "../../src/logic/LogicCallback";
 import {GameLogicListener} from "../../src/logic/GameLogicListener";
 import {Square} from "../../src/model/Square";
+import {SquareCollector} from "../../src/logic/SquareCollector";
 
 const expect = chai.expect;
 describe('GameLogic class', () => {
@@ -39,6 +40,12 @@ describe('GameLogic class', () => {
             onGameOver(winner: Player | null): void { cbGO(winner); }
             onGameStarted(activePlayer: Player): void { cbGS(activePlayer); }
             onNewSquaresFound(player: Player, squares: Square[]): void { cbNSF(player,squares); }
+        }
+    }
+
+    function mockSquareCollector(cbR : () => void) {
+        return new class extends SquareCollector {
+            reset() { cbR(); }
         }
     }
 
@@ -154,6 +161,21 @@ describe('GameLogic class', () => {
         gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
 
         expect(() => gameLogic.startGame(nonGameBoardPlayer)).to.throw(Error);
+    });
+
+    // Test:
+    it('startGame(player) should reset the square collector' , () => {
+        playerLogic1 = mockPlayerLogic(player1, _);
+        playerLogic2 = mockPlayerLogic(player2, _);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+        let squareCollectorReset = false;
+
+        gameLogic.setSquareCollector(mockSquareCollector(() => {
+            squareCollectorReset = true;
+        }));
+        gameLogic.startGame(player1)
+
+        expect(squareCollectorReset).to.be.true;
     });
 
 
