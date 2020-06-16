@@ -18,9 +18,7 @@ describe('SquareCollector class', () => {
         squareCollector = new SquareCollector();
     });
 
-
-    // ---- detectNewSquares(gameboard,player):
-
+    // ---- Mock setup:
     function mockPlayerMoves(movesPlayer1: number[], movesPlayer2: number[]): void {
         movesPlayer1.forEach(i => gameBoard.placePieceOnField(i, player1));
         movesPlayer2.forEach(i => gameBoard.placePieceOnField(i, player2));
@@ -29,6 +27,9 @@ describe('SquareCollector class', () => {
     function aSquare(pieces: quadruple, player: Player): Square {
         return new Square(pieces, player);
     }
+
+
+    // ---- detectNewSquares(gameboard,player):
 
     // Test:
     it('detectNewSquares(gameboard,player) should return empty array when the game board is empty' , () => {

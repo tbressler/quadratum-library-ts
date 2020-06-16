@@ -18,13 +18,33 @@ describe('GameOverVerifier class', () => {
         gameOverVerifier = new GameOverVerifier(150, 15);
     });
 
-
-    // ---- constructor(minScore,minDifference):
-
+    // ---- Mock setup:
     function mockPlayerMoves(movesPlayer1: number[], movesPlayer2: number[]): void {
         movesPlayer1.forEach(i => gameBoard.placePieceOnField(i, player1));
         movesPlayer2.forEach(i => gameBoard.placePieceOnField(i, player2));
     }
+    function mockSquareCollector(scorePlayer1: number, scorePlayer2: number): SquareCollector {
+        return new class extends SquareCollector {
+            getScore(player: Player): number {
+                return (player == player1) ? scorePlayer1 : scorePlayer2;
+            }
+        }
+    }
+    function mockGameBoard(piece: Player|null, leaveIndexEmpty: number = -1): GameBoard {
+        return new class extends GameBoard {
+            constructor() {
+                super(player1, player2);
+            }
+            getPieceFromField(index: number): Player|null {
+                if (leaveIndexEmpty == index)
+                    return null;
+                return piece;
+            }
+        }
+    }
+
+
+    // ---- constructor(minScore,minDifference):
 
     // Test:
     it('constructor(minScore,minDifference) should throw an error when minScore is negative' , () => {
@@ -48,27 +68,6 @@ describe('GameOverVerifier class', () => {
 
 
     // ---- isGameOver(gameboard,squareCollector):
-
-    function mockSquareCollector(scorePlayer1: number, scorePlayer2: number): SquareCollector {
-        return new class extends SquareCollector {
-            getScore(player: Player): number {
-                return (player == player1) ? scorePlayer1 : scorePlayer2;
-            }
-        }
-    }
-
-    function mockGameBoard(piece: Player|null, leaveIndexEmpty: number = -1): GameBoard {
-        return new class extends GameBoard {
-            constructor() {
-                super(player1, player2);
-            }
-            getPieceFromField(index: number): Player|null {
-                if (leaveIndexEmpty == index)
-                    return null;
-                return piece;
-            }
-        }
-    }
 
     // Test:
     it('isGameOver(gameBoard,squareCollector) should return PLAYER1_WON if player1 has a score of 150 and player2 only 135' , () => {
