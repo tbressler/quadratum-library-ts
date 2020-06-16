@@ -22,7 +22,7 @@ describe('Player class', () => {
     // Test:
     it('should have a name' , () => {
         player = new Player('Player 1');
-        expect(player.getName).to.equal('Player 1');
+        expect(player.getName()).to.equal('Player 1');
     });
 
 });

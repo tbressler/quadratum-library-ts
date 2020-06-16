@@ -65,8 +65,8 @@ export class GameOverVerifier {
      * @return The game over state, never null.
      */
     public isGameOver(gameBoard: GameBoard, squareCollector: SquareCollector): GameOverState {
-        let scorePlayer1 = squareCollector.getScore(gameBoard.getPlayer1);
-        let scorePlayer2 = squareCollector.getScore(gameBoard.getPlayer2);
+        let scorePlayer1 = squareCollector.getScore(gameBoard.getPlayer1());
+        let scorePlayer2 = squareCollector.getScore(gameBoard.getPlayer2());
 
         // Check if one player has won the game:
         if ((scorePlayer1 >= this.minScore) || (scorePlayer2 >= this.minScore)) {
@@ -106,7 +106,7 @@ export class GameOverVerifier {
 
     /* Checks if the players can do more squares on the game board. */
     private canPlayersDoMoreSquares(gameBoard: GameBoard): PossibleMoves {
-        let player1 = gameBoard.getPlayer1;
+        let player1 = gameBoard.getPlayer1();
 
         let possible: [number, number] | null;
         let pieces: [Player|null, Player|null, Player|null, Player|null] = [null, null, null, null];

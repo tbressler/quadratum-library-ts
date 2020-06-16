@@ -20,7 +20,7 @@ export class Player {
     }
 
     /** Returns the name of the player. */
-    get getName() {
+    public getName(): string {
         return this.name;
     }
 

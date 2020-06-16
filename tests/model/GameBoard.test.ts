@@ -46,7 +46,7 @@ describe('GameBoard class', () => {
 
     // Test:
     it('getPlayer1() should have a player 1' , () => {
-        expect(gameBoard.getPlayer1).to.equal(player1);
+        expect(gameBoard.getPlayer1()).to.equal(player1);
     });
 
 
@@ -54,7 +54,7 @@ describe('GameBoard class', () => {
 
     // Test:
     it('getPlayer2() should have a player 2' , () => {
-        expect(gameBoard.getPlayer2).to.equal(player2);
+        expect(gameBoard.getPlayer2()).to.equal(player2);
     });
 
 

@@ -76,7 +76,7 @@ export class Square implements Hashable {
      */
     public hashCode(): number {
         let result = this.hashCodeForArray(this.fields);
-        result = Math.imul(31, result) + this.hashCodeForString(this.player.getName)
+        result = Math.imul(31, result) + this.hashCodeForString(this.player.getName())
         return result;
     }
 

@@ -74,7 +74,7 @@ export class GameLogic {
         return  new class implements LogicCallback {
 
             public makeMove(index: number, player: Player): boolean {
-                if (!parentThis.isGameStarted)
+                if (!parentThis.isGameStarted())
                     throw new Error('Game is not started!');
                 if (player != parentThis.activePlayerLogic!.getPlayer())
                     throw new Error('The player is not active!');
@@ -101,7 +101,7 @@ export class GameLogic {
     private checkPlayers(gameBoard: GameBoard, player1: Player, player2: Player): void {
         if (player1 == player2)
             throw new Error('playerLogic1 and playerLogic2 uses the same player!');
-        if ((player1 != gameBoard.getPlayer1) || (player2 != gameBoard.getPlayer2))
+        if ((player1 != gameBoard.getPlayer1()) || (player2 != gameBoard.getPlayer2()))
             throw new Error('Players of logic and game board doesn\'t match!');
     }
 
@@ -111,7 +111,7 @@ export class GameLogic {
      *
      * @param squareCollector The square collector.
      */
-    set setSquareCollector(squareCollector: SquareCollector) {
+    public setSquareCollector(squareCollector: SquareCollector): void {
         this.squareCollector = squareCollector;
     }
 
@@ -121,7 +121,7 @@ export class GameLogic {
      *
      * @param gameOverVerifier The game over verifier.
      */
-    set setGameOverVerifier(gameOverVerifier: GameOverVerifier) {
+    public setGameOverVerifier(gameOverVerifier: GameOverVerifier): void {
         this.gameOverVerifier = gameOverVerifier;
     }
 
@@ -227,7 +227,7 @@ export class GameLogic {
      *
      * @return The active player or null.
      */
-    get getActivePlayer(): Player|null {
+    public getActivePlayer(): Player|null {
         if (this.activePlayerLogic == null)
             return null;
         return this.activePlayerLogic.getPlayer();
@@ -238,7 +238,7 @@ export class GameLogic {
      *
      * @return The active player logic or null.
      */
-    get getActivePlayerLogic(): PlayerLogic|null {
+    public getActivePlayerLogic(): PlayerLogic|null {
         return this.activePlayerLogic;
     }
 
@@ -248,7 +248,7 @@ export class GameLogic {
      *
      * @return true if the game was started, otherwise false.
      */
-    get isGameStarted(): boolean {
+    public isGameStarted(): boolean {
         return this.isStarted;
     }
 
@@ -258,7 +258,7 @@ export class GameLogic {
      *
      * @return The game board.
      */
-    get getGameBoard(): GameBoard {
+    public getGameBoard(): GameBoard {
         return this.gameBoard;
     }
 
