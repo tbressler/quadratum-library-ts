@@ -25,19 +25,19 @@ export class SquareCollector {
      */
     public detectNewSquares(gameBoard: GameBoard, player: Player): Square[] {
 
-        let foundSquares: Square[] = this.findNewSquares(gameBoard, player);
+        let foundSquares = this.findNewSquares(gameBoard, player);
 
-        if (foundSquares.length == 0)
+        if (foundSquares.size() == 0)
             return [];
 
         foundSquares.forEach((s) => this.squares.push(s));
 
-        return foundSquares;
+        return foundSquares.values();
     }
 
     /* Finds new squares for the given player. */
-    private findNewSquares(gameBoard: GameBoard, player: Player): Square[] {
-        let result: Square[] = [];
+    private findNewSquares(gameBoard: GameBoard, player: Player): HashSet<Square> {
+        let result = new HashSet<Square>();
         let possible: [number, number] | null;
         let square: Square;
 
@@ -63,7 +63,7 @@ export class SquareCollector {
                     square = new Square([i,j,possible[0],possible[1]], player);
 
                     // Skip if square is well-known
-                    if (this.squares.contains(square))
+                    if (result.contains(square) || this.squares.contains(square))
                         continue;
 
                     result.push(square);
