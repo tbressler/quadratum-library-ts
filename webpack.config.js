@@ -2,7 +2,9 @@ const path = require('path');
 
 module.exports = {
     mode: 'development',
-    entry: './src/quadratum.ts',
+    entry: [
+        './src/logic/SquareCollector.ts'
+    ],
     devtool: 'inline-source-map',
     module: {
         rules: [

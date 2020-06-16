@@ -21,7 +21,7 @@ export class SquareCollector {
      *
      * @param gameBoard The game board.
      * @param player The player.
-     * @return A set of the new detected squares for the player, never null.
+     * @return A set of the new detected squares for the player.
      */
     public detectNewSquares(gameBoard: GameBoard, player: Player): Square[] {
 
@@ -78,11 +78,10 @@ export class SquareCollector {
     /**
      * Returns all the squares found by this detector.
      *
-     * @return A set of the squares, never null.
+     * @return A set of the squares.
      */
     public getDetectedSquares(): Square[] {
-        // TODO Return squares here!
-        return [];
+        return this.squares.values();
     }
 
 

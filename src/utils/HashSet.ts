@@ -1,11 +1,19 @@
 /**
- * Interface for objects that can be used in a hash set.
+ * Interface for objects that can be used in a hash set (HashSet).
  *
  * @author Tobias Breßler
  * @version 1.0
  */
 export interface Hashable {
+
+    /**
+     * Returns a hash code value for the object. This method is supported for the benefit of
+     * hash sets.
+     *
+     * @return A hash code value for this object.
+     */
     hashCode(): number;
+
 }
 
 /**
@@ -33,6 +41,12 @@ export class HashSet<T extends Hashable> {
 
     public forEach(callbackfn: (value: T) => void, thisArg?: any): void {
         return this.internalMap.forEach(callbackfn);
+    }
+
+    public values(): T[] {
+        let result: T[] = [];
+        this.internalMap.forEach(v => result.push(v));
+        return result;
     }
 
     public clear(): void {

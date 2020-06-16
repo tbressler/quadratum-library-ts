@@ -24,12 +24,7 @@ describe('SquareCollector class', () => {
 
     // Test:
     it('constructor(fields,player) should not throw an error with valid parameter values' , () => {
-        let squares = new HashSet<Square>();
-        squares.push(new Square([0,1,8,9], player1));
-        squares.push(new Square([0,2,16,18], player1));
-        squares.push(new Square([0,1,8,9], player2));
-        squares.forEach((s) => console.log(s));
-        console.log(squares.size);
+
     });
 
 
