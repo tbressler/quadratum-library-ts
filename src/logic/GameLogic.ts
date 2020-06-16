@@ -177,7 +177,7 @@ export class GameLogic {
 
     /* Checks if the active player is valid. */
     private checkStartGamePrecondition(activePlayer: Player): void {
-        if ((activePlayer != this.player1) || (activePlayer != this.player2))
+        if ((activePlayer != this.player1) && (activePlayer != this.player2))
             throw new Error('Player is unknown at the game board!');
     }
 

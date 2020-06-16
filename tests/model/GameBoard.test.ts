@@ -15,6 +15,14 @@ describe('GameBoard class', () => {
         gameBoard = new GameBoard(player1, player2);
     });
 
+    // ---- Mock setup:
+    function mockListener(cbOPP: (n: number, p: Player) => void, cbOGBC: () => void): GameBoardListener {
+        return new class implements GameBoardListener {
+            onPiecePlaced(index: number, player: Player): void { cbOPP(index, player); }
+            onGameBoardCleared(): void { cbOGBC(); }
+        }
+    }
+
 
     // ---- constructor():
 
@@ -184,14 +192,6 @@ describe('GameBoard class', () => {
 
 
     // ---- addGameBoardListener(listener):
-
-    // Mock for listeners.
-    function mockListener(cbOPP: (n: number, p: Player) => void, cbOGBC: () => void): GameBoardListener {
-        return new class implements GameBoardListener {
-            onPiecePlaced(index: number, player: Player): void { cbOPP(index, player); }
-            onGameBoardCleared(): void { cbOGBC(); }
-        }
-    }
 
     // Test:
     it('addGameBoardListener(index) should add a listener that will be notified if a piece was placed' , () => {
