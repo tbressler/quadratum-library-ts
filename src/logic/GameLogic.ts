@@ -74,6 +74,13 @@ export class GameLogic {
         const _parent = this;
         return  new class implements LogicCallback {
 
+            /**
+             * Make the move on the game board.
+             *
+             * @param index The field index, between 0..63.
+             * @param player The player.
+             * @return True if the move was successful or false if not.
+             */
             public makeMove(index: number): boolean {
                 if (!_parent.isGameStarted())
                     throw new Error('Game is not started!');
@@ -92,6 +99,7 @@ export class GameLogic {
 
                 return true;
             }
+
         };
     }
 
