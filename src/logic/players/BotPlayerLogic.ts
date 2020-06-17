@@ -152,7 +152,7 @@ export class BotPlayerLogic extends AbstractPlayerLogic {
 
         GameBoardUtils.assertIndex(indexWithMaxValue);
 
-        callback.makeMove(indexWithMaxValue, this.getPlayer());
+        callback.makeMove(indexWithMaxValue);
     }
 
     /* Updates the heat map at the given index with the score. */

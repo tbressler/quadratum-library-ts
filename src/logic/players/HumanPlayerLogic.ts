@@ -69,7 +69,7 @@ export class HumanPlayerLogic extends AbstractPlayerLogic {
         if (!this.logicCallback)
             throw new Error('Illegal application state!');
 
-        return this.logicCallback.makeMove(index, this.getPlayer());
+        return this.logicCallback.makeMove(index);
     }
 
 }
