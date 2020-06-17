@@ -23,9 +23,6 @@ describe('GameLogic class', () => {
     let playerLogic1: PlayerLogic;
     let playerLogic2: PlayerLogic;
     let gameLogic: GameLogic;
-    // beforeEach(function () {
-    //
-    // });
 
     // ---- Mock setup:
     function mockPlayerMoves(movesPlayer1: number[], movesPlayer2: number[]): void {
@@ -447,17 +444,23 @@ describe('GameLogic class', () => {
         playerLogic1 = mockPlayerLogic(player1, (gb,cb) => { cb.makeMove(14); });
         playerLogic2 = mockPlayerLogic(player2, _null);
         gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
-        let listenerNotified = false;
-        let listener = mockGameLogicListener(_null, _null, () => {
-            listenerNotified = true;
+        let listener1Notified = false;
+        let listener1 = mockGameLogicListener(_null, _null, () => {
+            listener1Notified = true;
+        }, _null);
+        let listener2Notified = false;
+        let listener2 = mockGameLogicListener(_null, _null, () => {
+            listener2Notified = true;
         }, _null);
 
-        gameLogic.addGameLogicListener(listener);
-        gameLogic.removeGameLogicListener(listener)
+        gameLogic.addGameLogicListener(listener1);
+        gameLogic.addGameLogicListener(listener2);
+        gameLogic.removeGameLogicListener(listener1)
 
         gameLogic.startGame(player1);
 
-        expect(listenerNotified).to.be.false;
+        expect(listener1Notified).to.be.false;
+        expect(listener2Notified).to.be.true;
     });
 
 
