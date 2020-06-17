@@ -109,17 +109,6 @@ describe('GameLogic class', () => {
         expect(gameLogic.isGameStarted()).to.be.true;
     });
 
-    // Test:
-    it('isGameStarted() should return true when game was started before' , () => {
-        playerLogic1 = mockPlayerLogic(player1, _null);
-        playerLogic2 = mockPlayerLogic(player2, _null);
-        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
-
-        gameLogic.startGame(player1);
-
-        expect(gameLogic.isGameStarted()).to.be.true;
-    });
-
 
     // ---- startGame(player):
 
