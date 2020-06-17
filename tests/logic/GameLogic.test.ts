@@ -138,20 +138,6 @@ describe('GameLogic class', () => {
         expect(startNotified).to.be.true;
     });
 
-    // Test:
-    it('startGame(player) should notify game logic listeners onGameStarted() with player2 when game was started with player2' , () => {
-        playerLogic1 = mockPlayerLogic(player1, _null);
-        playerLogic2 = mockPlayerLogic(player2, _null);
-        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
-        let startNotified = false;
-
-        gameLogic.addGameLogicListener(mockGameLogicListener(_null, _null, (player) => {
-            if (player == player2) startNotified = true;
-        }, _null));
-        gameLogic.startGame(player2);
-
-        expect(startNotified).to.be.true;
-    });
 
     // Test:
     it('startGame(player) should throw an error for unknown players' , () => {
@@ -177,6 +163,160 @@ describe('GameLogic class', () => {
         gameLogic.startGame(player1)
 
         expect(squareCollectorReset).to.be.true;
+    });
+
+    // Test:
+    it('startGame(player) should notify game logic listeners onGameStarted() with player2 when game was started with player2' , () => {
+        playerLogic1 = mockPlayerLogic(player1, _null);
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+        let startNotified = false;
+
+        gameLogic.addGameLogicListener(mockGameLogicListener(_null, _null, (player) => {
+            if (player == player2) startNotified = true;
+        }, _null));
+        gameLogic.startGame(player2);
+
+        expect(startNotified).to.be.true;
+    });
+
+    // Test:
+    it('startGame(player) should notify listeners onActivePlayerChanged() with player1 when game was started with player1' , () => {
+        playerLogic1 = mockPlayerLogic(player1, _null);
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        let activePlayerChanged = false;
+        gameLogic.addGameLogicListener(mockGameLogicListener((ap) => {
+            if (ap == player1) activePlayerChanged = true;
+        }, _null, _null, _null));
+
+        gameLogic.startGame(player1)
+
+        expect(activePlayerChanged).to.be.true;
+    });
+
+    // Test:
+    it('startGame(player) should notify listeners onActivePlayerChanged() with player2 when game was started with player2' , () => {
+        playerLogic1 = mockPlayerLogic(player1, _null);
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        let activePlayerChanged = false;
+        gameLogic.addGameLogicListener(mockGameLogicListener((ap) => {
+            if (ap == player2) activePlayerChanged = true;
+        }, _null, _null, _null));
+
+        gameLogic.startGame(player2)
+
+        expect(activePlayerChanged).to.be.true;
+    });
+
+    // Test:
+    it('startGame(player) should request move on player logic for player 1 when game was started with player1' , () => {
+        let requestMove = false;
+        playerLogic1 = mockPlayerLogic(player1, () => {
+            requestMove = true;
+        });
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        gameLogic.startGame(player1)
+
+        expect(requestMove).to.be.true;
+    });
+
+    // Test:
+    it('startGame(player) should request move on player logic for player 2 when game was started with player2' , () => {
+        playerLogic1 = mockPlayerLogic(player1, _null);
+        let requestMove = false;
+        playerLogic2 = mockPlayerLogic(player2, () => {
+            requestMove = true;
+        });
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        gameLogic.startGame(player2)
+
+        expect(requestMove).to.be.true;
+    });
+
+    // Test:
+    it('player logic should place a piece on the game board when making a move' , () => {
+        playerLogic1 = mockPlayerLogic(player1, (gb,cb) => {
+            cb.makeMove(10);
+        });
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        gameLogic.startGame(player1)
+
+        expect(gameBoard.getPieceFromField(10)).to.equal(player1);
+    });
+
+    // Test:
+    it('player logic should place the pieces when player logic 1 and 2 making moves' , () => {
+        playerLogic1 = mockPlayerLogic(player1, (gb,cb) => {
+            cb.makeMove(10);
+        });
+        playerLogic2 = mockPlayerLogic(player2, (gb,cb) => {
+            cb.makeMove(20);
+        });
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        gameLogic.startGame(player1)
+
+        expect(gameBoard.getPieceFromField(10)).to.equal(player1);
+        expect(gameBoard.getPieceFromField(20)).to.equal(player2);
+    });
+
+    // Test:
+    it('player logic should not make a move if the field is not empty (makeMove() returns false)' , () => {
+        playerLogic1 = mockPlayerLogic(player1, (gb,cb) => {
+            cb.makeMove(23);
+        });
+        let emptyFieldResult = false;
+        playerLogic2 = mockPlayerLogic(player2, (gb,cb) => {
+            if (cb.makeMove(23) == false) emptyFieldResult = true;
+        });
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        gameLogic.startGame(player1)
+
+        expect(gameBoard.getPieceFromField(23)).to.equal(player1);
+        expect(emptyFieldResult).to.be.true;
+    });
+
+    // Test:
+    it('player logic should throw an error if index is lower than 0 when making a move' , () => {
+        playerLogic1 = mockPlayerLogic(player1, (gb,cb) => {
+            cb.makeMove(-1);
+        });
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        expect(() => gameLogic.startGame(player1)).to.throw(Error);
+    });
+
+    // Test:
+    it('player logic should throw an error if index is greater than 63 when making a move' , () => {
+        playerLogic1 = mockPlayerLogic(player1, (gb,cb) => {
+            cb.makeMove(64);
+        });
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        expect(() => gameLogic.startGame(player1)).to.throw(Error);
+    });
+
+    // Test:
+    it('player logic should throw an error if index is no integer when making a move' , () => {
+        playerLogic1 = mockPlayerLogic(player1, (gb,cb) => {
+            cb.makeMove(23.5);
+        });
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        expect(() => gameLogic.startGame(player1)).to.throw(Error);
     });
 
 

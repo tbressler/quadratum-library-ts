@@ -15,6 +15,6 @@ export interface LogicCallback {
      * @param player The player.
      * @return True if the move was successful or false if not.
      */
-    makeMove(index: number, player: Player): boolean;
+    makeMove(index: number): boolean;
 
 }

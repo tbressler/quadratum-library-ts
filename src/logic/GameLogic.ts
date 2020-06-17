@@ -74,19 +74,17 @@ export class GameLogic {
         const _parent = this;
         return  new class implements LogicCallback {
 
-            public makeMove(index: number, player: Player): boolean {
+            public makeMove(index: number): boolean {
                 if (!_parent.isGameStarted())
                     throw new Error('Game is not started!');
-                if (player != _parent.activePlayerLogic!.getPlayer())
-                    throw new Error('The player is not active!');
                 GameBoardUtils.assertIndex(index);
 
                 if (!_parent.gameBoard.isFieldEmpty(index))
                     return false;
 
-                _parent.gameBoard.placePieceOnField(index, player);
+                _parent.gameBoard.placePieceOnField(index, _parent.activePlayerLogic!.getPlayer());
 
-                _parent.checkGameBoardForSquares(player);
+                _parent.checkGameBoardForSquares(_parent.activePlayerLogic!.getPlayer());
                 if (_parent.checkIfGameIsOver())
                     return true;
 
