@@ -6,8 +6,9 @@ import {Player} from "../../src/model/Player";
 import {PlayerLogic} from "../../src/logic/PlayerLogic";
 import {LogicCallback} from "../../src/logic/LogicCallback";
 import {GameLogicListener} from "../../src/logic/GameLogicListener";
-import {Square} from "../../src/model/Square";
+import {quadruple, Square} from "../../src/model/Square";
 import {SquareCollector} from "../../src/logic/SquareCollector";
+import {GameOverState, GameOverVerifier} from "../../src/logic/GameOverVerifier";
 
 const expect = chai.expect;
 describe('GameLogic class', () => {
@@ -27,6 +28,11 @@ describe('GameLogic class', () => {
     // });
 
     // ---- Mock setup:
+    function mockPlayerMoves(movesPlayer1: number[], movesPlayer2: number[]): void {
+        movesPlayer1.forEach(i => gameBoard.placePieceOnField(i, player1));
+        movesPlayer2.forEach(i => gameBoard.placePieceOnField(i, player2));
+    }
+
     function mockPlayerLogic(player: Player, cbRM: (gameBoard: GameBoard, callback: LogicCallback) => void) {
         return new class implements PlayerLogic {
             getPlayer(): Player { return player; }
@@ -47,6 +53,17 @@ describe('GameLogic class', () => {
         return new class extends SquareCollector {
             reset() { cbR(); }
         }
+    }
+
+    function mockGameOverVerifier(minScore: number, minDifference: number, mockedState: GameOverState) {
+        return new class extends GameOverVerifier {
+            constructor() { super(minScore, minDifference); }
+            isGameOver(gameBoard: GameBoard, squareCollector: SquareCollector): GameOverState { return mockedState; }
+        };
+    }
+
+    function aSquare(pieces: quadruple, player: Player): Square {
+        return new Square(pieces, player);
     }
 
 
@@ -308,6 +325,74 @@ describe('GameLogic class', () => {
         expect(() => gameLogic.startGame(player1)).to.throw(Error);
     });
 
+    // Test:
+    it('player logic should notify game logic listeners when game was won by player 1' , () => {
+        playerLogic1 = mockPlayerLogic(player1, (gb,cb) => { cb.makeMove(14); });
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+        gameLogic.setGameOverVerifier(mockGameOverVerifier(150, 15, GameOverState.PLAYER1_WON));
+        let player1WinsNotified = false;
+        gameLogic.addGameLogicListener(mockGameLogicListener(_null, (w) => {
+            if (w == player1) player1WinsNotified = true;
+        }, _null, _null));
+
+        gameLogic.startGame(player1);
+
+        expect(player1WinsNotified).to.be.true;
+    });
+
+    // Test:
+    it('player logic should notify game logic listeners when game was won by player 1' , () => {
+        playerLogic1 = mockPlayerLogic(player1, (gb,cb) => { cb.makeMove(14); });
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+        gameLogic.setGameOverVerifier(mockGameOverVerifier(150, 15, GameOverState.PLAYER2_WON));
+        let player2WinsNotified = false;
+        gameLogic.addGameLogicListener(mockGameLogicListener(_null, (w) => {
+            if (w == player2) player2WinsNotified = true;
+        }, _null, _null));
+
+        gameLogic.startGame(player1);
+
+        expect(player2WinsNotified).to.be.true;
+    });
+
+    // Test:
+    it('player logic should notify game logic listeners when game was won by player 1' , () => {
+        playerLogic1 = mockPlayerLogic(player1, (gb,cb) => { cb.makeMove(14); });
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+        gameLogic.setGameOverVerifier(mockGameOverVerifier(150, 15, GameOverState.GAME_DRAW));
+        let gameDrawNotified = false;
+        gameLogic.addGameLogicListener(mockGameLogicListener(_null, (w) => {
+            if (!w) gameDrawNotified = true;
+        }, _null, _null));
+
+        gameLogic.startGame(player1);
+
+        expect(gameDrawNotified).to.be.true;
+    });
+
+    // Test:
+    it('player logic should notify squares when found' , () => {
+        playerLogic1 = mockPlayerLogic(player1, (gb,cb) => { mockPlayerMoves([27,32,52],[]); cb.makeMove(57); });
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+        let newSquaresFoundNotified = false;
+        gameLogic.addGameLogicListener(mockGameLogicListener(_null, _null, _null, (p,s) => {
+            newSquaresFoundNotified = true;
+            expect(s).to.deep.include(aSquare([27,32,52,57], player1));
+        }));
+
+        gameLogic.startGame(player1);
+
+        expect(newSquaresFoundNotified).to.be.true;
+        expect(gameLogic.getSquareCount(player1)).to.equal(1);
+        expect(gameLogic.getScore(player1)).to.equal(25);
+        expect(gameLogic.getSquares()).to.length(1);
+        expect(gameLogic.getSquares()).to.deep.include(aSquare([27,32,52,57], player1));
+    });
+
 
     // ---- getActivePlayer():
 
@@ -352,6 +437,27 @@ describe('GameLogic class', () => {
         gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
 
         expect(gameLogic.getGameBoard()).to.equal(gameBoard);
+    });
+
+
+    // ---- removeGameLogicListener(listener):
+
+    // Test:
+    it('removeGameLogicListener(listener) should remove listener and doesn\'t get notified' , () => {
+        playerLogic1 = mockPlayerLogic(player1, (gb,cb) => { cb.makeMove(14); });
+        playerLogic2 = mockPlayerLogic(player2, _null);
+        gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+        let listenerNotified = false;
+        let listener = mockGameLogicListener(_null, _null, () => {
+            listenerNotified = true;
+        }, _null);
+
+        gameLogic.addGameLogicListener(listener);
+        gameLogic.removeGameLogicListener(listener)
+
+        gameLogic.startGame(player1);
+
+        expect(listenerNotified).to.be.false;
     });
 
 
