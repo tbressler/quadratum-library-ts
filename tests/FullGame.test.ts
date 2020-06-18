@@ -40,7 +40,7 @@ describe('Full game', () => {
     // ---- Full games:
 
     // Game 1:
-    it('where player 1 should win' , () => {
+    it('where player 2 should win' , () => {
 
         // Setup listener for the game board:
         gameBoard.addGameBoardListener(mockGameBoardListener(() => {
@@ -54,11 +54,11 @@ describe('Full game', () => {
         let playerLogic2 = new HumanPlayerLogic(player2);
         let gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
 
-        let player1Won = false;
+        let player2Won = false;
         gameLogic.addGameLogicListener(mockGameLogicListener(() => {
                 // on active player changed.
             }, (winner) => {
-                if (winner == player1) player1Won = true;
+                if (winner == player2) player2Won = true;
             }, () => {
                 // on game started.
             }, () => {
@@ -69,18 +69,19 @@ describe('Full game', () => {
         gameLogic.startGame(player1);
 
         // Make moves:
-        // TODO Add moves that lets player 1 win:
-        let player1Moves = [ 1, 15, 48, 62, 10, 12, 14, 26, 30, 28];
-        let player2Moves = [34, 59, 54, 29, 36, 38, 52, 18, 20, 36];
+        let player1Moves = [ 2, 4, 9, 11, 15, 16, 20, 22, 25, 27, 31, 32, 34, 36, 43, 45, 48];
+        let player2Moves = [ 6, 8, 12, 18, 19, 23, 29, 33, 35, 38, 41, 42, 49, 51, 52, 55, 57];
 
         for (let i=0; i < player1Moves.length; i++) {
             playerLogic1.placePiece(player1Moves[i]);
             playerLogic2.placePiece(player2Moves[i]);
         }
 
-        // TODO expect(player1Won).to.be.true;
-        // TODO expect(gameLogic.getScore(player1)).to.equal(150);
-        // TODO expect(gameLogic.getScore(player2)).to.equal(100);
+        expect(player2Won).to.be.true;
+        expect(gameLogic.getScore(player1)).to.equal(93);
+        expect(gameLogic.getSquareCount(player1)).to.equal(5);
+        expect(gameLogic.getScore(player2)).to.equal(155);
+        expect(gameLogic.getSquareCount(player2)).to.equal(6);
     });
 
 });
