@@ -58,8 +58,8 @@ export class BotPlayerLogic extends AbstractPlayerLogic {
      * @param callback The callback of the game logic.
      */
     public requestMove(gameBoard: GameBoard, callback: LogicCallback): void {
-        let playerHeatMap: number[] = new Array(64).fill(0);
-        let opponentHeatMap: number[] = new Array(64).fill(0);
+        let playerHeatMap: number[] = []; for (let i=0; i<64; i++) playerHeatMap[i] = 0; // Fill array with 0.
+        let opponentHeatMap: number[] = []; for (let i=0; i<64; i++) opponentHeatMap[i] = 0; // Fill array with 0.
 
         let pieces: (Player|null)[] = [];
         let possible: [number, number]|null;
