@@ -71,13 +71,13 @@ export class SquareUtils {
      * Returns the score for the given square.
      *
      * @param square The 4 indexes of the edges of the square.
-     * @return The score for the square, between 1..64.
+     * @return The score for the square.
      */
     public static getScore(square: quadruple): number {
         let minIndex = Math.min(square[0], square[1], square[2], square[3]);
         let maxIndex = Math.max(square[0], square[1], square[2], square[3]);
-        let dx = GameBoardUtils.distY(minIndex, maxIndex) + 1;
-        return dx * dx;
+        let dy = GameBoardUtils.distY(minIndex, maxIndex) + 1;
+        return dy * dy;
     }
 
 }
