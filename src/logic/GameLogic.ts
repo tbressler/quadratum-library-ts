@@ -92,7 +92,7 @@ export class GameLogic {
                 _parent.gameBoard.placePieceOnField(index, _parent.activePlayerLogic!.getPlayer());
 
                 _parent.checkGameBoardForSquares(_parent.activePlayerLogic!.getPlayer());
-                if (_parent.checkIfGameIsOver())
+                if (_parent.isGameOver())
                     return true;
 
                 _parent.switchActivePlayer();
@@ -141,17 +141,20 @@ export class GameLogic {
     }
 
     /* Returns true if the game is over, otherwise false. */
-    private checkIfGameIsOver(): boolean {
+    private isGameOver(): boolean {
         switch(this.gameOverVerifier.isGameOver(this.gameBoard, this.squareCollector)) {
             case GameOverState.NOT_OVER:
                 return false;
             case GameOverState.PLAYER1_WON:
+                this.isStarted = false;
                 this.fireOnGameOver(this.player1);
                 return true;
             case GameOverState.PLAYER2_WON:
+                this.isStarted = false;
                 this.fireOnGameOver(this.player2);
                 return true;
             case GameOverState.GAME_DRAW:
+                this.isStarted = false;
                 this.fireOnGameOver(null);
                 return true;
             default:

@@ -62,7 +62,7 @@ export class HumanPlayerLogic extends AbstractPlayerLogic {
         GameBoardUtils.assertIndex(index);
 
         if (!this.isPlayerActive())
-            return false;
+            throw new Error('Player is not active!')
 
         this.playerActive = false;
 

@@ -54,7 +54,7 @@ describe('HumanPlayerLogic class', () => {
         let madeMove = false;
         logicCallback = mockLogicCallback(() => { madeMove = true; return true; });
 
-        expect(humanPlayerLogic.placePiece(1)).to.be.false;
+        expect(() => humanPlayerLogic.placePiece(1)).to.throw(Error);
         expect(madeMove).to.be.false;
     });
 

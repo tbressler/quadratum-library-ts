@@ -9,6 +9,7 @@ import {GameLogicListener} from "../../src/logic/GameLogicListener";
 import {quadruple, Square} from "../../src/model/Square";
 import {SquareCollector} from "../../src/logic/SquareCollector";
 import {GameOverState, GameOverVerifier} from "../../src/logic/GameOverVerifier";
+import {HumanPlayerLogic} from "../../src/logic/players/HumanPlayerLogic";
 
 const expect = chai.expect;
 describe('GameLogic class', () => {
@@ -336,6 +337,19 @@ describe('GameLogic class', () => {
         gameLogic.startGame(player1);
 
         expect(player1WinsNotified).to.be.true;
+    });
+
+    // Test:
+    it('player logic should not accept new moves when game is over (player 1 won)' , () => {
+        let logic1 = new HumanPlayerLogic(player1);
+        let logic2 = new HumanPlayerLogic(player2);
+        gameLogic = new GameLogic(gameBoard, logic1, logic2);
+        gameLogic.setGameOverVerifier(mockGameOverVerifier(150, 15, GameOverState.PLAYER1_WON));
+
+        gameLogic.startGame(player1);
+        logic1.placePiece(0);
+
+        expect(() => logic2.placePiece(1)).to.throw(Error);
     });
 
     // Test:
