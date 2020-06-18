@@ -73,7 +73,7 @@ export class GameBoardUtils {
      * @param index The index.
      */
     public static assertIndex(index: number): void {
-        if (!GameBoardUtils.isInt(index) || (index < 0) || (index > 63)) throw Error('index must be an integer and between 0..63!');
+        if (!GameBoardUtils.isInt(index) || (index < 0) || (index > 63)) throw Error('The value \'index\' must be an integer and between 0..63, but was \''+index+'\'.');
     }
 
 

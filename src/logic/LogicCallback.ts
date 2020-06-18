@@ -1,5 +1,3 @@
-import {Player} from "../model/Player";
-
 /**
  * This interface is used as a callback between the game logic and the player logic.
  *

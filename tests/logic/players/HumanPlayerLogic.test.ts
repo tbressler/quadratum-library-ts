@@ -25,6 +25,14 @@ describe('HumanPlayerLogic class', () => {
         };
     }
 
+    // ---- getPlayer():
+
+    // Test:
+    it('getPlayer() returns player from constructor' , () => {
+        expect(humanPlayerLogic.getPlayer()).to.equal(player1);
+    });
+
+
     // ---- isPlayerActive():
 
     // Test:

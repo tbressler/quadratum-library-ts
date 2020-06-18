@@ -58,8 +58,8 @@ export class BotPlayerLogic extends AbstractPlayerLogic {
      * @param callback The callback of the game logic.
      */
     public requestMove(gameBoard: GameBoard, callback: LogicCallback): void {
-        let playerHeatMap: number[] = [64];
-        let opponentHeatMap: number[] = [64];
+        let playerHeatMap: number[] = new Array(64).fill(0);
+        let opponentHeatMap: number[] = new Array(64).fill(0);
 
         let pieces: (Player|null)[] = [];
         let possible: [number, number]|null;
@@ -87,10 +87,10 @@ export class BotPlayerLogic extends AbstractPlayerLogic {
                 numberOfOpponentPieces = 0;
 
                 for (let p = 0; p < 4; p++)
-                if (pieces[p] == this.getPlayer())
-                    numberOfPlayerPieces++;
-                else if (pieces[p] != null)
-                    numberOfOpponentPieces++;
+                    if (pieces[p] == this.getPlayer())
+                        numberOfPlayerPieces++;
+                    else if (pieces[p] != null)
+                        numberOfOpponentPieces++;
 
                 // Calculate possible score of square:
                 scoreForSquare = SquareUtils.getScore([i, j, possible[0], possible[1]]);
