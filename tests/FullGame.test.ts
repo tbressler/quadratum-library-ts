@@ -84,4 +84,38 @@ describe('Full game', () => {
         expect(gameLogic.getSquareCount(player2)).to.equal(6);
     });
 
+    // Game 2:
+    it('where player 1 has a score of 105 (with 3 squares) and player 2 has a score of 36 (with 1 square)' , () => {
+
+        // Setup listener for the game board:
+        gameBoard.addGameBoardListener(mockGameBoardListener(() => {
+            // on piece placed.
+        }, () => {
+            // on game board cleared.
+        }));
+
+        // Setup human player logic:
+        let playerLogic1 = new HumanPlayerLogic(player1);
+        let playerLogic2 = new HumanPlayerLogic(player2);
+        let gameLogic = new GameLogic(gameBoard, playerLogic1, playerLogic2);
+
+        // Start the game:
+        gameLogic.startGame(player1);
+
+        // The moves were taken from the original MetaSquares tutorial.
+        let player1Moves = [ 3, 6, 8, 14, 22, 27, 30, 32, 41, 52, 55, 57, 62];
+        let player2Moves = [ 2, 11, 16, 17, 20, 21, 31, 35, 38, 47, 56, 59, 61];
+
+        for (let i=0; i < player1Moves.length; i++) {
+            playerLogic1.placePiece(player1Moves[i]);
+            playerLogic2.placePiece(player2Moves[i]);
+        }
+
+        // The square count and the scores were taken from the original MetaSquares tutorial.
+        expect(gameLogic.getScore(player1)).to.equal(105);
+        expect(gameLogic.getSquareCount(player1)).to.equal(3);
+        expect(gameLogic.getScore(player2)).to.equal(36);
+        expect(gameLogic.getSquareCount(player2)).to.equal(1);
+    });
+
 });
