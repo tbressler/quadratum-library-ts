@@ -174,7 +174,7 @@ export class BotPlayerLogic extends AbstractPlayerLogic {
 
     /* Returns true, if the values should be randomized. */
     private doRandomization(): boolean {
-        return this.randomizeMoves && (Math.random() % 2 == 0);
+        return this.randomizeMoves && (Math.random() > 0.5);
     }
 
 }
